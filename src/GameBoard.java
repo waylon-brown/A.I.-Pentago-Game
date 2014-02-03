@@ -16,6 +16,11 @@ public class GameBoard {
 		slots[row - 1][col - 1] = player;
 	}
 	
+	public boolean isValidMove(int row, int col)
+	{
+		return (slots[row - 1][col - 1] == 0);
+	}
+	
 	public void rotate(String key)
 	{
 		//rotate counter-clockwise

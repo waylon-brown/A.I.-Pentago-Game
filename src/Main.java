@@ -12,18 +12,26 @@ public class Main {
 	{
 		String[] array = input.split(" ");
 		try{
-			board.makeMove(currentPlayer, Integer.parseInt(array[0]), Integer.parseInt(array[1]));
-			if(currentPlayer == 1)
-				currentPlayer = 2;
+			if(board.isValidMove(Integer.parseInt(array[0]), Integer.parseInt(array[1])))
+			{
+				board.makeMove(currentPlayer, Integer.parseInt(array[0]), Integer.parseInt(array[1]));
+				if(currentPlayer == 1)
+					currentPlayer = 2;
+				else
+					currentPlayer = 1;
+				//check if winner before rotating
+				if(board.determineWinner() == 0)
+					board.rotate(array[2]);
+				else if(board.determineWinner() == 1)
+					System.out.println("Player 1 wins!");
+				else
+					System.out.println("Player 2 wins!");
+			}
 			else
-				currentPlayer = 1;
-			//check if winner before rotating
-			if(board.determineWinner() == 0)
-				board.rotate(array[2]);
-			else if(board.determineWinner() == 1)
-				System.out.println("Player 1 wins!");
-			else
-				System.out.println("Player 2 wins!");
+			{
+				System.out.println("Invalid move attempted.");
+				startGame();
+			}
 				
 		}catch(Exception e)
 		{
