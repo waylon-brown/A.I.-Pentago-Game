@@ -10,6 +10,7 @@ public class GameTree {
 		thisBoard = board;
 	}
 	
+	//populates 'children' ArrayList with all possible next moves
 	public void populateNodeChildren()
 	{
 		ArrayList<GameBoard> boardChildren = thisBoard.getChildren();

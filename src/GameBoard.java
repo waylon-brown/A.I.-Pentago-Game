@@ -5,7 +5,7 @@ import com.sun.xml.internal.ws.util.StringUtils;
 
 public class GameBoard {
 	private int[][] slots;
-	private String lastMove = "";
+	private String lastMove = "";	//move that defines this board compared to the parent of this board in the game tree
 	
 	public GameBoard()
 	{
@@ -13,7 +13,7 @@ public class GameBoard {
 		blankBoard();
 	}
 	
-	//used for copying game boards
+	//used for copying game board moves
 	public GameBoard(int[][] moves)
 	{
 		slots = new int[6][6];
@@ -31,7 +31,7 @@ public class GameBoard {
 
 	public void makeMove(int player, int row, int col)
 	{
-		//use +1 since input is from 1-6, not 0-5
+		//use -1 since input is from 1-6, not 0-5
 		slots[row - 1][col - 1] = player;
 	}
 	
@@ -58,7 +58,46 @@ public class GameBoard {
 	    return rotateClockwise(rotateClockwise(rotateClockwise(mat)));
 	}
 	
-	//used for populating GameTree node containing this GameBoard
+	//used for minimax algorithm to determine how "good" a gameboard is
+	public int getUtility()
+	{
+		int utility = 0;
+		int streak = 0;			//streak is used to add additional points for more than 2 in a row
+								//2 in a row = 1 pt, 3 in a row = 2 pt, etc.
+		
+		//count horizontal doubles
+		for(int i = 0; i < 6; i++)	//go down row
+		{
+			for(int j = 0; j < 5; j++)	//count doubles
+			{
+				if(slots[i][j] == 2 && slots[i][j+1] == 2)
+				{
+					utility += streak + 1;
+					streak++;
+				}
+				else
+					streak = 0;
+			}
+		}
+		
+		//count vertical doubles
+		for(int i = 0; i < 6; i++)	//go down columns
+		{
+			for(int j = 0; j < 5; j++)	//count doubles
+			{
+				if(slots[j][i] == 2 && slots[j+1][i] == 2)
+				{
+					utility += streak + 1;
+					streak++;
+				}
+				else
+					streak = 0;
+			}
+		}
+		return utility;
+	}
+	
+	//gets all children to this board, i.e. all next possible moves in the game
 	public ArrayList<GameBoard> getChildren()
 	{
 		ArrayList<GameBoard> returnList = new ArrayList<GameBoard>();
@@ -66,14 +105,6 @@ public class GameBoard {
 		////////////////////////////////////////////////////////////
 		//do this for each orientation of each quadrant of the board
 		////////////////////////////////////////////////////////////
-
-		//create new temporary move array
-//		int[][] tempSlots = new int[6][6];
-//		for(int i = 0; i < 6; i++)
-//		{
-//			for(int j = 0; j < 6; j++)
-//				tempSlots[i][j] = slots[i][j];
-//		}
 		
 		for(int i = 1; i < 7; i++)
 		{
@@ -206,10 +237,6 @@ public class GameBoard {
 		return returnList;
 	}
 	
-	
-	
-	
-	
 	public void printBoard()
 	{
 		System.out.println("Current board:\n");
@@ -245,46 +272,6 @@ public class GameBoard {
 	public String getLastMove()
 	{
 		return lastMove;
-	}
-	
-	//used for minimax to determine how "good" a gameboard is, count doubles
-	public int getUtility()
-	{
-		int utility = 0;
-		boolean last = false;	//used to add bonus points for multiple in a row
-		int streak = 0;			//streak is used to add additional points for more than 2 in a row
-								//2 in a row = 1 pt, 3 in a row = 2 pt, etc.
-		
-		//count horizontal doubles
-		for(int i = 0; i < 6; i++)	//go down row
-		{
-			for(int j = 0; j < 5; j++)	//count doubles
-			{
-				if(slots[i][j] == 2 && slots[i][j+1] == 2)
-				{
-					utility += streak + 1;
-					streak++;
-				}
-				else
-					streak = 0;
-			}
-		}
-		
-		//count vertical doubles
-		for(int i = 0; i < 6; i++)	//go down columns
-		{
-			for(int j = 0; j < 5; j++)	//count doubles
-			{
-				if(slots[j][i] == 2 && slots[j+1][i] == 2)
-				{
-					utility += streak + 1;
-					streak++;
-				}
-				else
-					streak = 0;
-			}
-		}
-		return utility;
 	}
 	
 	public void rotate(String key)
