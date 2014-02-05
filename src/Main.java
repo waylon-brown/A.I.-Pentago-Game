@@ -86,9 +86,15 @@ public class Main {
 			{
 				System.out.println("Computing AI move...");
 				AI computer = new AI(depth);
+				
+				//timestamp, used to calculate run time
+				long startTime = System.currentTimeMillis();	
 				//computes move with best minimax utility given the depth, returns the int of the final maximum utility at head node of GameTree
 				int aiInput = computer.intelligentMove(depth, currentTree, false);
-				System.out.println("AI chooses the following move: " + computer.getBoard().getLastMove() + " with minimax utility of " + aiInput);
+				long endTime = System.currentTimeMillis();
+				
+				System.out.println("AI chooses the following move: " + computer.getBoard().getLastMove() + "\nwith minimax utility of: " + 
+						aiInput + "\nwhich took " + (endTime-startTime) + "ms to compute.");
 				parseInput(computer.getBoard().getLastMove());
 				board.printBoard();
 			}

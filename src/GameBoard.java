@@ -94,6 +94,31 @@ public class GameBoard {
 					streak = 0;
 			}
 		}
+		
+		//count main diagonal up-left to down-right
+		for(int i = 0; i < 5; i++)
+		{
+			if(slots[i][i] == 2 && slots[i+1][i+1] == 2)
+			{
+				utility += streak + 1;
+				streak++;
+			}
+			else
+				streak = 0;
+		}
+		
+		//count main diagonal up-right to down-left
+		for(int i = 0; i < 5; i++)
+		{
+			if(slots[i][5-i] == 2 && slots[i+1][4-i] == 2)
+			{
+				utility += streak + 1;
+				streak++;
+			}
+			else
+				streak = 0;
+		}
+		
 		return utility;
 	}
 	
