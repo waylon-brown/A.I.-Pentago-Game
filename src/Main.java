@@ -5,9 +5,25 @@ import java.util.Scanner;
 
 public class Main {
 	
+	//Pentago Game with AI
+	//
+	//Goal of the game is to make 5 marbles with your color in a row to win.
+	//The game board is 6x6, but is split into 4 quadrants. For each turn,
+	//you place a marble in a slot then rotate one of the quadrants any direction
+	//you choose.
+	//
+	//The game is set up to be a human vs. an AI, but each student has their AI
+	//compete against the other's by putting in the enemy AI as your "human" input
+	//to see whose AI is "smartest".
+	
+	
+	//depth of minimax GameTree, more depth level = harder AI
+	private final static int depth = 2;
+	
 	static GameBoard board;
 	static int currentPlayer = 0;
 	
+	//parse game move input
 	private static void parseInput(String input)
 	{
 		String[] array = input.split(" ");
@@ -15,6 +31,7 @@ public class Main {
 			if(board.isValidMove(Integer.parseInt(array[0]), Integer.parseInt(array[1])))
 			{
 				board.makeMove(currentPlayer, Integer.parseInt(array[0]), Integer.parseInt(array[1]));
+				//change current player
 				if(currentPlayer == 1)
 					currentPlayer = 2;
 				else
@@ -23,32 +40,29 @@ public class Main {
 				if(board.determineWinner() == 0)
 					board.rotate(array[2]);
 				else if(board.determineWinner() == 1)
-					System.out.println("Player 1 wins!");
+					System.out.println("Human wins. I need to work on my AI.");
 				else
-					System.out.println("Player 2 wins!");
+					System.out.println("AI wins!");
 			}
 			else
 			{
 				System.out.println("Invalid move attempted.");
-				startGame();
+				startGame();	//reset turn
 			}
 				
 		}catch(Exception e)
 		{
-			System.out.println("Could not interpret input.");
+			System.out.println("Could not interpret input, or game is full.");
 		}
 	}
 	
 	private static void startGame()
-	{
-		
+	{		
 		//Create scanner to obtain user input
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         String input = null;
         
-        //computer player
-        AI ai = new AI(board);
-        
+        GameTree currentTree = new GameTree(board);        
 		//while no current winner
 		while(board.determineWinner() == 0)
 		{
@@ -70,18 +84,21 @@ public class Main {
 			}
 			else	//if AI is going
 			{
-				String aiInput = ai.randomMove();
-				System.out.println("AI chooses the following move: " + aiInput);
-				parseInput(aiInput);
+				System.out.println("Computing AI move...");
+				AI computer = new AI(depth);
+				//computes move with best minimax utility given the depth, returns the int of the final maximum utility at head node of GameTree
+				int aiInput = computer.intelligentMove(depth, currentTree, false);
+				System.out.println("AI chooses the following move: " + computer.getBoard().getLastMove() + " with minimax utility of " + aiInput);
+				parseInput(computer.getBoard().getLastMove());
 				board.printBoard();
 			}
 			
 		}
 		//game is over
 		if(board.determineWinner() == 1)
-			System.out.println("Player 1 wins!");
+			System.out.println("Human wins. I need to work on my AI.");
 		else
-			System.out.println("Player 2 wins!");
+			System.out.println("AI wins!");
 	}
 	
 	private static void determineStarting()
@@ -104,15 +121,29 @@ public class Main {
         }
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		board = new GameBoard();
         
+//		//test utility, utility is used for minimax algorithm and represents how "good" a board is
+//		board.makeMove(2, 1, 1);
+//		board.makeMove(2, 1, 2);
+//		board.makeMove(2, 1, 3);
+//		board.makeMove(2, 3, 1);
+//		board.makeMove(2, 4, 1);
+//		board.makeMove(2, 6, 2);
+//		board.makeMove(2, 6, 3);
+//		board.makeMove(2, 6, 4);
+//		System.out.println("Utility test for: ");
+//		board.printBoard();
+//		System.out.println("Utility is " + board.getUtility(2));
+//		//////////////
+		
 		determineStarting();
 		
 		System.out.println("Game started!\n");
 		board.printBoard();
 		
         startGame();
-        
 	}
 }

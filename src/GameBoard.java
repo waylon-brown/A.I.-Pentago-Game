@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 import com.sun.xml.internal.ws.util.StringUtils;
 
 
 public class GameBoard {
-	int[][] slots;
+	private int[][] slots;
+	private String lastMove = "";
 	
 	public GameBoard()
 	{
@@ -10,6 +13,22 @@ public class GameBoard {
 		blankBoard();
 	}
 	
+	//used for copying game boards
+	public GameBoard(int[][] moves)
+	{
+		slots = new int[6][6];
+		for(int i = 0; i < 6; i++)
+		{
+			for(int j = 0; j < 6; j++)
+				slots[i][j] = moves[i][j];
+		}
+	}
+	
+	public void setLastMove(String move)
+	{
+		lastMove = move;
+	}
+
 	public void makeMove(int player, int row, int col)
 	{
 		//use +1 since input is from 1-6, not 0-5
@@ -19,193 +38,6 @@ public class GameBoard {
 	public boolean isValidMove(int row, int col)
 	{
 		return (slots[row - 1][col - 1] == 0);
-	}
-	
-	public void rotate(String key)
-	{
-		//rotate counter-clockwise
-		if(Character.isUpperCase(key.charAt(0)))
-		{
-			if(key.equals("A"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i][j];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateCounterClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i][j] = quadrant[i][j];
-					}
-				}
-			}
-			else if (key.equals("B"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i][j+3];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateCounterClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i][j+3] = quadrant[i][j];
-					}
-				}
-			}
-			else if (key.equals("C"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i+3][j];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateCounterClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i+3][j] = quadrant[i][j];
-					}
-				}
-			}
-			else if (key.equals("D"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i+3][j+3];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateCounterClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i+3][j+3] = quadrant[i][j];
-					}
-				}
-			}
-		}
-		else	//rotate clockwise
-		{
-			if(key.equals("a"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i][j];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i][j] = quadrant[i][j];
-					}
-				}
-			}
-			else if (key.equals("b"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i][j+3];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i][j+3] = quadrant[i][j];
-					}
-				}
-			}
-			else if (key.equals("c"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i+3][j];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i+3][j] = quadrant[i][j];
-					}
-				}
-			}
-			else if (key.equals("d"))
-			{
-				int[][] quadrant = new int[3][3];
-				//set quadrant to correct values
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						quadrant[i][j] = slots[i+3][j+3];
-					}
-				}
-				//rotate quadrant
-				quadrant = rotateClockwise(quadrant);
-				//put quadrant back in gameboard
-				for(int i = 0; i < 3; i++)
-				{
-					for(int j = 0; j < 3; j++)
-					{
-						slots[i+3][j+3] = quadrant[i][j];
-					}
-				}
-			}
-		}
 	}
 	
 	//rotate matrix clockwise
@@ -225,6 +57,158 @@ public class GameBoard {
 	static int[][] rotateCounterClockwise(int[][] mat) {
 	    return rotateClockwise(rotateClockwise(rotateClockwise(mat)));
 	}
+	
+	//used for populating GameTree node containing this GameBoard
+	public ArrayList<GameBoard> getChildren()
+	{
+		ArrayList<GameBoard> returnList = new ArrayList<GameBoard>();
+		
+		////////////////////////////////////////////////////////////
+		//do this for each orientation of each quadrant of the board
+		////////////////////////////////////////////////////////////
+
+		//create new temporary move array
+//		int[][] tempSlots = new int[6][6];
+//		for(int i = 0; i < 6; i++)
+//		{
+//			for(int j = 0; j < 6; j++)
+//				tempSlots[i][j] = slots[i][j];
+//		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotateA();
+					tempBoard.setLastMove(i + " " + j + " " + "A");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotateB();
+					tempBoard.setLastMove(i + " " + j + " " + "B");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotateC();
+					tempBoard.setLastMove(i + " " + j + " " + "C");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotateD();
+					tempBoard.setLastMove(i + " " + j + " " + "D");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotatea();
+					tempBoard.setLastMove(i + " " + j + " " + "a");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotateb();
+					tempBoard.setLastMove(i + " " + j + " " + "b");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotatec();
+					tempBoard.setLastMove(i + " " + j + " " + "c");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		for(int i = 1; i < 7; i++)
+		{
+			for(int j = 1; j < 7; j++)
+			{
+				//if valid move, add a board with this move to the list
+				if(isValidMove(i, j))
+				{
+					GameBoard tempBoard = new GameBoard(slots);
+					tempBoard.makeMove(2, i, j);	//use 2 as it is for the AI's move
+					tempBoard.rotated();
+					tempBoard.setLastMove(i + " " + j + " " + "d");
+					returnList.add(tempBoard);
+				}
+			}
+		}
+		
+		return returnList;
+	}
+	
+	
+	
+	
 	
 	public void printBoard()
 	{
@@ -255,6 +239,278 @@ public class GameBoard {
 		{
 			for(int j = 0; j < slots[i].length; j++)
 				slots[i][j] = 0;
+		}
+	}
+	
+	public String getLastMove()
+	{
+		return lastMove;
+	}
+	
+	//used for minimax to determine how "good" a gameboard is, count doubles
+	public int getUtility()
+	{
+		int utility = 0;
+		boolean last = false;	//used to add bonus points for multiple in a row
+		int streak = 0;			//streak is used to add additional points for more than 2 in a row
+								//2 in a row = 1 pt, 3 in a row = 2 pt, etc.
+		
+		//count horizontal doubles
+		for(int i = 0; i < 6; i++)	//go down row
+		{
+			for(int j = 0; j < 5; j++)	//count doubles
+			{
+				if(slots[i][j] == 2 && slots[i][j+1] == 2)
+				{
+					utility += streak + 1;
+					streak++;
+				}
+				else
+					streak = 0;
+			}
+		}
+		
+		//count vertical doubles
+		for(int i = 0; i < 6; i++)	//go down columns
+		{
+			for(int j = 0; j < 5; j++)	//count doubles
+			{
+				if(slots[j][i] == 2 && slots[j+1][i] == 2)
+				{
+					utility += streak + 1;
+					streak++;
+				}
+				else
+					streak = 0;
+			}
+		}
+		return utility;
+	}
+	
+	public void rotate(String key)
+	{
+		//rotate counter-clockwise
+		if(Character.isUpperCase(key.charAt(0)))
+		{
+			if(key.equals("A"))
+			{
+				rotateA();
+			}
+			else if (key.equals("B"))
+			{
+				rotateB();
+			}
+			else if (key.equals("C"))
+			{
+				rotateC();
+			}
+			else if (key.equals("D"))
+			{
+				rotateD();
+			}
+		}
+		else	//rotate clockwise
+		{
+			if(key.equals("a"))
+			{
+				rotatea();
+			}
+			else if (key.equals("b"))
+			{
+				rotateb();
+			}
+			else if (key.equals("c"))
+			{
+				rotatec();
+			}
+			else if (key.equals("d"))
+			{
+				rotated();
+			}
+		}
+	}
+	
+	public void rotateA()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i][j];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateCounterClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i][j] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotateB()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i][j+3];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateCounterClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i][j+3] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotateC()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i+3][j];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateCounterClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i+3][j] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotateD()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i+3][j+3];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateCounterClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i+3][j+3] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotatea()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i][j];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i][j] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotateb()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i][j+3];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i][j+3] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotatec()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i+3][j];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i+3][j] = quadrant[i][j];
+			}
+		}
+	}
+	
+	public void rotated()
+	{
+		int[][] quadrant = new int[3][3];
+		//set quadrant to correct values
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				quadrant[i][j] = slots[i+3][j+3];
+			}
+		}
+		//rotate quadrant
+		quadrant = rotateClockwise(quadrant);
+		//put quadrant back in gameboard
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 3; j++)
+			{
+				slots[i+3][j+3] = quadrant[i][j];
+			}
 		}
 	}
 	
